@@ -54,6 +54,8 @@ class Ad:
     has_phone: bool
     favorites: int  # Unavailable on Ad from Search
 
+    raw: dict = field(repr=False, compare=False)
+
     _client: Any = field(repr=False)
     _user_id: str = field(repr=False)
     _user: User = field(repr=False)
@@ -111,6 +113,7 @@ class Ad:
             location=location,
             has_phone=raw.get("has_phone"),
             favorites=raw.get("counters", {}).get("favorites"),
+            raw=raw,
             _client=client,
             _user_id=raw_owner.get("user_id"),
             _user=None,

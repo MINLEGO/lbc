@@ -1,3 +1,9 @@
+## Unreleased
+
+### Added
+
+- `Ad.raw` exposes the raw JSON used to build the ad, for ads from `search()` and `get_ad()`.
+
 ## 1.1.7
 
 ### Changed
