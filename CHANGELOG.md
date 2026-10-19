@@ -1,3 +1,9 @@
+## Unreleased
+
+### Changed
+
+- **Breaking:** `Ad.brand` is now the `value_label` of the first attribute whose key is `brand` or ends with `_brand`, or `None` if there is none. It used to be the top-level `brand` field, which is always the platform name (`"leboncoin"`).
+
 ## 1.1.7
 
 ### Changed
