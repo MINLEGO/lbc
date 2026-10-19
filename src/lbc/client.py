@@ -1,7 +1,14 @@
 import curl_cffi
 from curl_cffi import BrowserTypeLiteral
+from curl_cffi.requests.exceptions import RequestException, Timeout
 
-from .exceptions import DatadomeError, NotFoundError, RequestError
+from .exceptions import (
+    DatadomeError,
+    NotFoundError,
+    ParseError,
+    RequestError,
+    RequestTimeout,
+)
 from .mixin import AdMixin, SearchMixin, SessionMixin, UserMixin
 from .model import Proxy
 
@@ -54,7 +61,10 @@ class Client(SessionMixin, SearchMixin, UserMixin, AdMixin):
 
         Raises:
             DatadomeError: Raised when the request is blocked by Datadome protection (HTTP 403).
-            RequestError: Raised for any other non-successful HTTP response.
+            NotFoundError: Raised when the resource does not exist (HTTP 404 or 410).
+            RequestTimeout: Raised when the request times out.
+            RequestError: Raised for any other non-successful HTTP response or transport failure (connection, DNS, proxy).
+            ParseError: Raised when a successful response is not valid JSON.
 
         Returns:
             dict: Parsed JSON response from the server.
@@ -62,15 +72,24 @@ class Client(SessionMixin, SearchMixin, UserMixin, AdMixin):
         if max_retries == -1:
             max_retries = self.max_retries
 
-        response: curl_cffi.Response = self.session.request(
-            method=method,
-            url=url,
-            json=payload,
-            verify=self.request_verify,
-            timeout=self.timeout,
-        )
+        try:
+            response: curl_cffi.Response = self.session.request(
+                method=method,
+                url=url,
+                json=payload,
+                verify=self.request_verify,
+                timeout=self.timeout,
+            )
+        except Timeout as e:
+            raise RequestTimeout("Request timed out.") from e
+        except RequestException as e:
+            raise RequestError(f"Request failed: {e}") from e
+
         if response.ok:
-            return response.json()
+            try:
+                return response.json()
+            except ValueError as e:
+                raise ParseError("Response is not valid JSON.") from e
         elif response.status_code == 403:
             if max_retries > 0:
                 self.session = self._init_session(

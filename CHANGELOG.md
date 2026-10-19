@@ -1,3 +1,13 @@
+## Unreleased
+
+### Added
+
+- `RequestTimeout` and `ParseError` exceptions.
+
+### Changed
+
+- `Client._fetch` now wraps transport errors (timeout, connection, DNS, proxy) and undecodable responses in `LBCError` subclasses, keeping the original exception as `__cause__`.
+
 ## 1.1.7
 
 ### Changed
