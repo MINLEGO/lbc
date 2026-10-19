@@ -45,6 +45,7 @@ class Ad:
     subject: str
     body: str
     brand: str
+    condition: str | None
     ad_type: str
     url: str
     price: float
@@ -103,6 +104,11 @@ class Ad:
             subject=raw.get("subject"),
             body=raw.get("body"),
             brand=raw.get("brand"),
+            condition=(
+                attributes["condition"].value_label
+                if "condition" in attributes
+                else None
+            ),
             ad_type=raw.get("ad_type"),
             url=raw.get("url"),
             price=raw.get("price_cents") / 100 if raw.get("price_cents") else None,
