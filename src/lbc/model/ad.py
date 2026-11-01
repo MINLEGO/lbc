@@ -44,8 +44,8 @@ class Ad:
     category_name: str
     subject: str
     body: str
-    brand: str
     condition: str | None
+    brand: str | None
     ad_type: str
     url: str
     price: float
@@ -54,6 +54,8 @@ class Ad:
     location: Location
     has_phone: bool
     favorites: int  # Unavailable on Ad from Search
+
+    raw: dict = field(repr=False, compare=False)
 
     _client: Any = field(repr=False)
     _user_id: str = field(repr=False)
@@ -103,11 +105,18 @@ class Ad:
             category_name=raw.get("category_name"),
             subject=raw.get("subject"),
             body=raw.get("body"),
-            brand=raw.get("brand"),
             condition=(
                 attributes["condition"].value_label
                 if "condition" in attributes
                 else None
+            ),
+            brand=next(
+                (
+                    attribute.value_label
+                    for key, attribute in attributes.items()
+                    if key == "brand" or key.endswith("_brand")
+                ),
+                None,
             ),
             ad_type=raw.get("ad_type"),
             url=raw.get("url"),
@@ -117,6 +126,7 @@ class Ad:
             location=location,
             has_phone=raw.get("has_phone"),
             favorites=raw.get("counters", {}).get("favorites"),
+            raw=raw,
             _client=client,
             _user_id=raw_owner.get("user_id"),
             _user=None,

@@ -10,6 +10,14 @@ class RequestError(LBCError):
     """Raised when an HTTP request fails with a non-success status code."""
 
 
+class RequestTimeout(RequestError):
+    """Raised when a request times out."""
+
+
+class ParseError(LBCError):
+    """Raised when a response was fetched but its data could not be decoded."""
+
+
 class DatadomeError(RequestError):
     """Raised when access is blocked by Datadome anti-bot protection."""
 
