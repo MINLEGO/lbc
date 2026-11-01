@@ -127,18 +127,15 @@ class SessionMixin:
         if impersonate is None:  # Pick a random browser client
             impersonate = random.choice(
                 [
-                    "chrome99_android",
-                    "chrome131_android",
-                    "safari153",
-                    "safari155",
-                    "safari170",
-                    "safari172_ios",
+                    "safari270_ios",
+                    "firefox133",
+                    "firefox135",
+                    "firefox144",
+                    "firefox147",
+                    "firefox154",
                     "tor145",
-                    "chrome_android",
-                    "safari15_3",
-                    "safari15_5",
-                    "safari17_0",
-                    "safari17_2_ios",
+                    "safari_ios",
+                    "safari_ios_beta",
                 ]
             )
 
