@@ -1,8 +1,15 @@
 ## Unreleased
 
+### Added
+
+- `RequestTimeout` and `ParseError` exceptions.
+
 ### Changed
 
 - **Breaking:** `Ad.brand` is now the `value_label` of the first attribute whose key is `brand` or ends with `_brand`, or `None` if there is none. It used to be the top-level `brand` field, which is always the platform name (`"leboncoin"`).
+- `Client._fetch` now wraps transport errors (timeout, connection, DNS, proxy) and undecodable responses in `LBCError` subclasses, keeping the original exception as `__cause__`.
+- `Ad.raw` exposes the raw JSON used to build the ad, for ads from `search()` and `get_ad()`.
+- `User.raw` and `Pro.raw` expose the raw JSON returned by the API (`get_user()` and `ad.user`).
 
 ## 1.1.7
 

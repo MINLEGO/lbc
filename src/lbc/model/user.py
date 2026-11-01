@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
@@ -100,6 +100,8 @@ class Pro:
     website_url: str
     rating: Rating
 
+    raw: dict = field(repr=False, compare=False)
+
 
 @dataclass
 class User:
@@ -117,6 +119,8 @@ class User:
     account_type: str
     description: str
     pro: Pro | None
+
+    raw: dict = field(repr=False, compare=False)
 
     @staticmethod
     def _build(user_data: dict, pro_data: dict | None) -> "User":
@@ -223,6 +227,7 @@ class User:
                 opening_hours=pro_information.get("opening_hours"),
                 website_url=pro_information.get("website_url"),
                 rating=pro_rating,
+                raw=pro_data,
             )
 
         return User(
@@ -240,6 +245,7 @@ class User:
             account_type=user_data.get("account_type"),
             description=user_data.get("description"),
             pro=pro,
+            raw=user_data,
         )
 
     @property
